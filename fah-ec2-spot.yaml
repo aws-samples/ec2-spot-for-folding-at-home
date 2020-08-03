@@ -1,0 +1,673 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: F@H Installation template on EC2 Spot GPU Instances using ASG (Auto Scaling Group)
+#Different region has different available EC2 instance types.  
+#This template works in the below listed AWS regions.
+Mappings:
+  CidrMappings:
+    vpc:
+      CIDR: 10.0.0.0/16
+  RegionMap:
+    ap-south-1:
+      AMI: ami-0f0c326cdb138ccd4
+      Overrides: 
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+    eu-west-2:
+      AMI: ami-0940ef16dafde738b
+      Overrides: 
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    eu-west-3:
+      AMI: ami-07b352ad0651e7e5a
+      Overrides: 
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.metal
+      - InstanceType: g4dn.xlarge
+    eu-west-1:
+      AMI: ami-03d79a70e81302ab6
+      Overrides: 
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+      - InstanceType: p3dn.24xlarge
+    ap-northeast-2:
+      AMI: ami-05b1c34901d80f8af
+      Overrides: 
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    ap-northeast-1:
+      AMI: ami-0a0e9c587c44f1d88
+      Overrides: 
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+      - InstanceType: p3dn.24xlarge
+    sa-east-1:
+      AMI: ami-01ad77f59d4ba0319
+      Overrides: 
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+    ca-central-1:
+      AMI: ami-024e4fde5ac768446
+      Overrides: 
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.metal
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    ap-southeast-1:
+      AMI: ami-0d0f5402d1cb720b9
+      Overrides: 
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    ap-southeast-2:
+      AMI: ami-0a0fddb6010773245
+      Overrides: 
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    eu-central-1:
+      AMI: ami-0b69de597b713ba83
+      Overrides: 
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    us-east-1:
+      AMI: ami-0e2a8509db267f072
+      Overrides:
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+      - InstanceType: p3dn.24xlarge
+    us-east-2:
+      AMI: ami-0d80c443c1b44c063
+      Overrides:
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g3s.xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+      - InstanceType: p2.16xlarge
+      - InstanceType: p2.8xlarge
+      - InstanceType: p2.xlarge
+      - InstanceType: p3.16xlarge
+      - InstanceType: p3.2xlarge
+      - InstanceType: p3.8xlarge
+    us-west-1:
+      AMI: ami-0ece9f8623ebec25f
+      Overrides:
+      - InstanceType: g2.2xlarge
+      - InstanceType: g2.8xlarge
+      - InstanceType: g3.16xlarge
+      - InstanceType: g3.4xlarge
+      - InstanceType: g3.8xlarge
+      - InstanceType: g4dn.12xlarge
+      - InstanceType: g4dn.16xlarge
+      - InstanceType: g4dn.2xlarge
+      - InstanceType: g4dn.4xlarge
+      - InstanceType: g4dn.8xlarge
+      - InstanceType: g4dn.xlarge
+    us-west-2:
+      AMI: ami-07bff1635c6a912a7
+      Overrides: 
+        - InstanceType: g2.2xlarge
+        - InstanceType: g2.8xlarge
+        - InstanceType: g3.16xlarge
+        - InstanceType: g3.4xlarge
+        - InstanceType: g3.8xlarge
+        - InstanceType: g3s.xlarge
+        - InstanceType: g4dn.12xlarge
+        - InstanceType: g4dn.16xlarge
+        - InstanceType: g4dn.2xlarge
+        - InstanceType: g4dn.4xlarge
+        - InstanceType: g4dn.8xlarge
+        - InstanceType: g4dn.xlarge
+        - InstanceType: p2.16xlarge
+        - InstanceType: p2.8xlarge
+        - InstanceType: p2.xlarge
+        - InstanceType: p3.16xlarge
+        - InstanceType: p3.2xlarge
+        - InstanceType: p3.8xlarge
+        - InstanceType: p3dn.24xlarge
+#
+#Summary of resources to be created
+Metadata:
+  Author:
+    Description: AWS EC2 Spot team
+  License:
+    Description: 'MIT-0. See the license file license.txt accompanying this file. 
+
+	Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this
+	software and associated documentation files (the "Software"), to deal in the Software
+	without restriction, including without limitation the rights to use, copy, modify,
+	merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+	PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+	OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+Outputs:
+  autoScalingGroup:
+    Description: The autoScalingGroup
+    Value:
+      Ref: autoScalingGroup
+  awsRegionId:
+    Description: The AWS Region ID your template was launched in
+    Value:
+      Ref: AWS::Region
+  instanceProfile:
+    Description: Instance profile ARN
+    Value:
+      Fn::GetAtt:
+      - instanceProfile
+      - Arn
+  publicSubnet1:
+    Description: Public subnet 1
+    Value:
+      Ref: publicSubnet1
+  publicSubnet2:
+    Description: Public subnet 2
+    Value:
+      Ref: publicSubnet2
+  vpc:
+    Description: The VPC
+    Value:
+      Ref: vpc
+#Parameters values can be customized
+Parameters:
+  desiredCapacity:
+    Default: 2
+    Description: Desired capacity
+    Type: Number
+  maxSize:
+    Default: 12
+    Description: Maximum capacity
+    Type: Number
+  minSize:
+    Default: 2
+    Description: Mininum capacity
+    Type: Number
+#
+Resources:
+  attachGateway:
+    DependsOn:
+    - vpc
+    - internetGateway
+    Properties:
+      InternetGatewayId:
+        Ref: internetGateway
+      VpcId:
+        Ref: vpc
+    Type: AWS::EC2::VPCGatewayAttachment
+ #autoScalingGroup OnDemandBaseCapacity and OnDemandBaseCapacity values can be customized 
+  autoScalingGroup:
+    DependsOn:
+    - launchTemplate
+    - publicSubnet1
+    - publicSubnet2
+    - autoScalingServiceLinkedRole
+    Properties:
+      DesiredCapacity:
+        Ref: desiredCapacity
+      HealthCheckType: EC2
+      MaxSize:
+        Ref: maxSize
+      MinSize:
+        Ref: minSize
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandBaseCapacity: 0
+          OnDemandPercentageAboveBaseCapacity: 0
+          SpotAllocationStrategy: capacity-optimized
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId:
+              Ref: launchTemplate
+            Version: 1
+          Overrides: 
+            !FindInMap 
+            - RegionMap
+            - !Ref 'AWS::Region'
+            - Overrides
+      VPCZoneIdentifier:
+      - Ref: publicSubnet1
+      - Ref: publicSubnet2
+    Type: AWS::AutoScaling::AutoScalingGroup
+  autoScalingServiceLinkedRole:
+    Properties:
+      AWSServiceName: autoscaling.amazonaws.com
+      Description: Default Service-Linked Role enables access to AWS Services and Resources used or managed by Auto Scaling
+    Type: AWS::IAM::ServiceLinkedRole
+  cloudWatchLogsGroup:
+    Properties:
+      LogGroupName: fahlog
+      RetentionInDays: 7
+    Type: AWS::Logs::LogGroup
+  ec2FleetServiceLinkedRole:
+    Properties:
+      AWSServiceName: ec2fleet.amazonaws.com
+      Description: Default EC2 Fleet Service Linked Role 
+    Type: AWS::IAM::ServiceLinkedRole
+  instanceProfile:
+    DependsOn:
+    - instanceRole
+    Properties:
+      Path: /
+      Roles:
+      - Ref: instanceRole
+    Type: AWS::IAM::InstanceProfile
+  instanceRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - autoscaling:SetInstanceProtection
+            - autoscaling:SetInstanceHealth
+            Effect: Allow
+            Resource: arn:aws:autoscaling:*:*:autoScalingGroup:*:autoScalingGroupName/*
+          Version: '2012-10-17'
+        PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - autoScalingGroupPolicy
+    Type: AWS::IAM::Role
+  internetGateway:
+    DependsOn:
+    - vpc
+    Type: AWS::EC2::InternetGateway
+  launchTemplate:
+    DependsOn:
+    - instanceProfile
+    - cloudWatchLogsGroup
+    Properties:
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn:
+            Fn::GetAtt:
+            - instanceProfile
+            - Arn
+        ImageId: !FindInMap 
+          - RegionMap
+          - !Ref 'AWS::Region'
+          - AMI
+        TagSpecifications:
+        - ResourceType: instance
+          Tags:
+          - Key: Name
+            Value:
+              Ref: AWS::StackName
+#UserData section: to download and install the Folding@home client
+        UserData:
+          Fn::Base64: 
+            !Sub  '#!/bin/bash -xe
+
+sudo yum -y update
+
+wget https://download.foldingathome.org/releases/public/release/fahclient/centos-6.7-64bit/v7.6/fahclient-7.6.13-1.x86_64.rpm
+
+sudo rpm -i --nodeps fahclient-7.6.13-1.x86_64.rpm
+
+wget https://download.foldingathome.org/releases/public/release/fahcontrol/centos-6.7-64bit/v7.6/fahcontrol-7.6.13-1.noarch.rpm
+
+sudo rpm -i --nodeps fahcontrol-7.6.13-1.noarch.rpm
+
+wget https://download.foldingathome.org/releases/public/release/fahviewer/centos-6.7-64bit/v7.6/fahviewer-7.6.13-1.x86_64.rpm
+
+sudo rpm -i --nodeps fahviewer-7.6.13-1.x86_64.rpm
+#
+# Cloud Watch Log
+
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+
+sudo rpm -i --nodeps amazon-cloudwatch-agent.rpm
+
+cat << EOF > /home/ec2-user/cloudwatch_config.json
+
+{
+
+        "agent": {
+
+                "run_as_user": "root"
+
+        },
+
+        "logs": {
+
+                "logs_collected": {
+
+    "files": {
+
+            "collect_list": [
+
+                    {
+
+          "file_path": "/var/lib/fahclient/log.txt",
+
+          "log_group_name": "fahlog",
+
+          "log_stream_name": "{instance_id}"
+
+                    }
+
+              ]
+
+      }
+
+               }
+
+        }
+
+}
+
+EOF
+
+sudo cp /home/ec2-user/cloudwatch_config.json /opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+#
+# If the gpu v=true it enables the GPU to be utilized
+cat << EOF > /home/ec2-user/fah_config.xml
+
+<config>
+
+<gpu v="true"/>
+
+<power v="full"/>
+# User information section, please modify accordingly
+<!-- User Information -->
+
+<team v="Default"/>
+
+<user v="0"/> 
+
+<passkey v="PASSKEY_HERE"/>
+
+</config>
+#
+EOF
+
+sudo /etc/init.d/FAHClient stop
+
+sudo cp /home/ec2-user/fah_config.xml /etc/fahclient/config.xml
+
+sudo /etc/init.d/FAHClient start
+
+'
+    Type: AWS::EC2::LaunchTemplate
+  publicRoute:
+    DependsOn:
+    - publicRouteTable
+    - internetGateway
+    - attachGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: internetGateway
+      RouteTableId:
+        Ref: publicRouteTable
+    Type: AWS::EC2::Route
+  publicRouteTable:
+    DependsOn:
+    - vpc
+    - attachGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: Public Route Table
+      VpcId:
+        Ref: vpc
+    Type: AWS::EC2::RouteTable
+  publicSubnet1:
+    DependsOn:
+    - attachGateway
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+        - 0
+        - Fn::GetAZs:
+            Ref: AWS::Region
+      CidrBlock:
+        Fn::Select:
+        - 0
+        - Fn::Cidr:
+          - Fn::FindInMap:
+            - CidrMappings
+            - vpc
+            - CIDR
+          - 256
+          - 8
+      MapPublicIpOnLaunch: true
+      Tags:
+      - Key: Name
+        Value:
+          Ref: AWS::StackName
+      VpcId:
+        Ref: vpc
+    Type: AWS::EC2::Subnet
+  publicSubnet1RouteTableAssociation:
+    DependsOn:
+    - publicRouteTable
+    - publicSubnet1
+    - attachGateway
+    Properties:
+      RouteTableId:
+        Ref: publicRouteTable
+      SubnetId:
+        Ref: publicSubnet1
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  publicSubnet2:
+    DependsOn:
+    - attachGateway
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+        - 1
+        - Fn::GetAZs:
+            Ref: AWS::Region
+      CidrBlock:
+        Fn::Select:
+        - 1
+        - Fn::Cidr:
+          - Fn::FindInMap:
+            - CidrMappings
+            - vpc
+            - CIDR
+          - 256
+          - 8
+      MapPublicIpOnLaunch: true
+      Tags:
+      - Key: Name
+        Value:
+          Ref: AWS::StackName
+      VpcId:
+        Ref: vpc
+    Type: AWS::EC2::Subnet
+  publicSubnet2RouteTableAssociation:
+    DependsOn:
+    - publicRouteTable
+    - publicSubnet2
+    - attachGateway
+    Properties:
+      RouteTableId:
+        Ref: publicRouteTable
+      SubnetId:
+        Ref: publicSubnet2
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  vpc:
+    Properties:
+      CidrBlock:
+        Fn::FindInMap:
+        - CidrMappings
+        - vpc
+        - CIDR
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+      - Key: Name
+        Value:
+          Ref: AWS::StackName
+    Type: AWS::EC2::VPC
+...
