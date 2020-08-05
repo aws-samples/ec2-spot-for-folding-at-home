@@ -1,12 +1,13 @@
 ## Researching treatments for infectious disease with Folding@home and Amazon EC2 Spot Instances
 This GitHub contains an AWS CloudFormation template along with step-by-step instructions for deploying EC2 Spot Instances - optimized for the latest Folding@home client software. We’ll leverage EC2 Spot best practices to be flexible across a combination of GPU-optimized Amazon EC2 Spot Instances configured in an Amazon EC2 Auto Scaling group (ASG) to handle launching and maintaining a desired capacity, and to automatically request resources to replace any that are interrupted or manually terminated. 
 
-#### About Folding@home
-Folding@home (FAH) is a distributed computing project that uses computational modeling to simulate protein structure, stability, and shape (how it folds). These simulations help to advance drug discoveries and cures for diseases linked to protein dynamics within human cells. The FAH software crowdsources its distributed compute platform allowing anyone to contribute by donating unused computational resources from personal computers, laptops, and cloud servers. 
+
+> #### About Folding@home
+> Folding@home (FAH) is a distributed computing project that uses computational modeling to simulate protein structure, stability, and shape (how it folds). These simulations help to advance drug discoveries and cures for diseases linked to protein dynamics within human cells. The FAH software crowdsources its distributed compute platform allowing anyone to contribute by donating unused computational resources from personal computers, laptops, and cloud servers. 
 
 
-#### EC2 Spot Instances
-[Spot Instances](https://aws.amazon.com/ec2/spot/) are spare EC2 capacity available at up to a 90% discount compared to On-Demand prices. The only difference between On-Demand and Spot Instances is that Spot Instances can be interrupted by EC2 with two minutes of notification when EC2 needs the capacity back. This makes Spot Instances a great fit for stateless, fault-tolerant workloads like big data, containers, batch processing, AI/ML training, CI/CD and test/dev. For more information, see Amazon EC2 Spot Instances. 
+> #### EC2 Spot
+> [EC2 Spot Instances](https://aws.amazon.com/ec2/spot/) are spare EC2 capacity available at up to a 90% discount compared to On-Demand prices. The only difference between On-Demand and Spot Instances is that Spot Instances can be interrupted by EC2 with two minutes of notification when EC2 needs the capacity back. This makes Spot Instances a great fit for stateless, fault-tolerant workloads like big data, containers, batch processing, AI/ML training, CI/CD and test/dev. For more information, see Amazon EC2 Spot Instances. 
 
 
 ## What you’ll build
