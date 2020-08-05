@@ -16,6 +16,8 @@ In addition to being flexible across instance types, another best practice for u
 •	Auto Scaling Group for scaling EC2 Spot instances in and out as needed using the Capacity Optimized allocation strategy.
 •	Amazon CloudWatch instance metrics and logs for real-time monitoring of our protein folding progress.
  
+ ![FAH](https://user-images.githubusercontent.com/68295015/89449052-5fcc6980-d70d-11ea-9419-e14cafad48e0.png)
+ 
 To complete the setup, you must have an Amazon Web Services (AWS) account with permissions to the listed resources above. When you sign up for AWS, your AWS account is automatically signed up for all services in AWS, including Amazon EC2. If you don't have an AWS account, find more info about creating an account here.
 
 ## Costs and Licensing
@@ -26,7 +28,7 @@ The AWS CloudFormation CFn template includes customizable configuration paramete
 After you deploy the CloudFormation template, we recommend that you enable AWS Cost Explorer. Cost Explorer is an easy-to-use interface that lets you visualize, understand, and manage your AWS costs and usage e.g. we can breakdown costs to show hourly costs for our protein folding project. 
 
 ## How to Deploy 
-Part One: Download and configure the CFn template. 
+**Part One: Download and configure the CFn template.** 
 
 First thing we’ll need to do is download, then make a few edits to the template. 
 Once downloaded, open the template file in your favorite text editor so we can make a few edits to the configuration before deploying.
