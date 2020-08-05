@@ -1,12 +1,12 @@
 ## Researching treatments for infectious disease with Folding@home and Amazon EC2 Spot Instances
-This GitHub contains a AWS CLoudFormation template and step-by-step instructions for deploying EC2 Spot Instances, optimized for the latest Folding@home client software. We’ll leverage EC2 Spot best practices to be flexible across a combination of GPU-optimized Amazon EC2 Spot Instances configured in an Amazon EC2 Auto Scaling group (ASG) to handle launching and maintaining a desired capacity, and to automatically request resources to replace any that are interrupted or manually terminated. 
+This GitHub contains an AWS CloudFormation template along with step-by-step instructions for deploying EC2 Spot Instances - optimized for the latest Folding@home client software. We’ll leverage EC2 Spot best practices to be flexible across a combination of GPU-optimized Amazon EC2 Spot Instances configured in an Amazon EC2 Auto Scaling group (ASG) to handle launching and maintaining a desired capacity, and to automatically request resources to replace any that are interrupted or manually terminated. 
 
-**Folding@home**
+**About Folding@home**
 Folding@home (FAH) is a distributed computing project that uses computational modeling to simulate protein structure, stability, and shape (how it folds). These simulations help to advance drug discoveries and cures for diseases linked to protein dynamics within human cells. The FAH software crowdsources its distributed compute platform allowing anyone to contribute by donating unused computational resources from personal computers, laptops, and cloud servers. 
 
 
 **EC2 Spot Instances**
-Spot Instances are spare EC2 capacity available at up to a 90% discount compared to On-Demand prices. The only difference between On-Demand and Spot Instances is that Spot Instances can be interrupted by EC2 with two minutes of notification when EC2 needs the capacity back. This makes Spot Instances a great fit for stateless, fault-tolerant workloads like big data, containers, batch processing, AI/ML training, CI/CD and test/dev. For more information, see Amazon EC2 Spot Instances. 
+[Spot Instances](https://aws.amazon.com/ec2/spot/) are spare EC2 capacity available at up to a 90% discount compared to On-Demand prices. The only difference between On-Demand and Spot Instances is that Spot Instances can be interrupted by EC2 with two minutes of notification when EC2 needs the capacity back. This makes Spot Instances a great fit for stateless, fault-tolerant workloads like big data, containers, batch processing, AI/ML training, CI/CD and test/dev. For more information, see Amazon EC2 Spot Instances. 
 
 
 ## What you’ll build
@@ -65,9 +65,17 @@ Under the events tab, you can see the status of the AWS resources being created.
 #### Results
 The Amazon CloudFormation template creates a log group “fahlog” that each of our instances will send log data to, that will allow us to visualize the protein folding progress in near real-time via the Amazon CloudWatch console. To see the log data, navigate over to the “Resources” tab and click on the cloudWatchLogGroup link for ‘fahlog’. Alternatively, you can navigate to the Amazon CloudWatch Console and select ‘fahlog’ under log groups. Note: Sometimes it takes a bit of time for Folding@Home Work Units (WU) to be downloaded in the instances and allocate all the available GPUs. 
 
+
+![logs](https://user-images.githubusercontent.com/68295015/89453519-40850a80-d714-11ea-9099-5f8d7e1e266d.png)
+
 In the CloudWatch console, let’s check out the ‘Insights’ feature in the left navigation menu to see analytics for our protein folding logs. Select fahlog in the search field and run the default query that is provided for you in the query editor window to show our protein folding results.
+
+![log results](https://user-images.githubusercontent.com/68295015/89453754-9194fe80-d714-11ea-8254-fd8eb0a407b7.png)
  
-Another thing we can do is create a Dashboard in the CloudWatch console that will automatically refresh based on the time intervals we set. Under Dashboards in the left Navigation bar, I was able to quickly whip up a few widgets to visualize CPU utilization, Network in/out, and protein folding completed steps. This is a pretty nifty tool that with a little more time, you could configure more detailed metrics like cost per fold, and GPU monitoring. 
+Another thing we can do is create a [Dashboard](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Dashboards.html) in the CloudWatch console that will automatically refresh based on the time intervals we set. Under Dashboards in the left Navigation bar, I was able to quickly whip up a few widgets to visualize CPU utilization, Network in/out, and protein folding completed steps. This is a pretty nifty tool that with a little more time, you could configure more detailed metrics like cost per fold, and GPU monitoring. 
+
+
+![cw_dashboard](https://user-images.githubusercontent.com/68295015/89454290-57782c80-d715-11ea-9afb-0837d78ee9d2.png)
 
 ### Part three: Clean up**
 You can let this run as long as you want to contribute to this project. When you’re ready to stop, CloudFormation gives us the option to delete the stack and resources created. On the CloudFormation console, select the stack, and select delete. When you delete a stack, you delete the stack and all of its resources.
@@ -75,15 +83,8 @@ You can let this run as long as you want to contribute to this project. When you
 ## Conclusion
 In this post, we launched a cluster of EC2 GPU-optimized Spot instances to aid in Folding@home’s protein dynamics research that could lead to therapeutics for infectious diseases. We leveraged Spot best practices by being flexible with instance selections across multiple families, sizes, and Availability Zones and by selecting the capacity-optimized allocation strategy to ensure our cluster scales optimally and securely. 
 
-## About Folding@home
+## About the project
 Folding@home is currently based at the Washington University School of Medicine in St. Louis, under the directorship of Dr. Greg Bowman. The project was started by the Pande Laboratory at Stanford University, under the direction of Dr. Vijay Pande, who led the project until 2019.[4] Since 2019, Folding@home has been led by Dr. Greg Bowman of Washington University in St. Louis, a former student of Dr. Pande, in close collaboration with Dr. John Chodera of MSKCC and Vince Voelz of Temple University.[5]
-
-With heightened interest in the project, Folding@home has grown to a community of 2M+ users, bringing together the compute power of over 600K GPUs and 1.6M CPUs. 
-
-This outpouring of support has made Folding@home one of the world's fastest computing systems - achieving speeds of approximately 1.2 exaFLOPS, or 2.3 x86 exaFLOPS, by April 9, 2020 - making it the world's first exaFLOP computing system. Folding@home‘s COVID-19 effort specifically focuses on better understanding how the viral protein’s moving parts enable to infect a human host, evade an immune response, and create new copies of the virus. The project is leveraging this insight to help design new therapeutic antibodies and small molecules that might prevent infection. They are engaged with a number of experimental collaborators to quickly iterate between computational design and experimental testing. 
-
-Jarman Hauser
-Jarman Hauser leads the EC2 Spot Research & Discovery team focused on leveraging AWS unused capacity to accelerate impact focused workloads. 
 
 
 
