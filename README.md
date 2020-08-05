@@ -31,7 +31,7 @@ The AWS CloudFormation CFn template includes customizable configuration paramete
 First thing we’ll need to do is download, then make a few edits to the template. 
 Once downloaded, open the template file in your favorite text editor so we can make a few edits to the configuration before deploying.
 
-In the User Information section, we have the option to create a unique username, join or create a new team, or contribute anonymously. For this example, I’ll leave the values set to default and contribute as an anonymous user, the default team. More details about teams and leaderboards can be found here and details about PASSKEYs here. 
+In the User Information section, we have the option to create a unique username, join or create a new team, or contribute anonymously. For this example, I’ll leave the values set to default and contribute as an anonymous user, the default team. More details about [teams and leaderboards](https://foldingathome.org/support/faq/stats-teams-usernames/)  can be found here and details about [PASSKEYs here](https://foldingathome.org/support/faq/points/passkey/). 
 
 ```bash
 <!-- User Information --> 
@@ -47,16 +47,20 @@ Next, we’ll log into the AWS console, Select the region you want to run the so
 
 In the CloudFormation console, click on create stack. Upload the template we just configured and click on Next to specify stack details.
 
-
- 
+<img width="1680" alt="create-stack" src="https://user-images.githubusercontent.com/68295015/89452622-d15ae680-d712-11ea-8c47-b97a7b55a21d.png"> 
 
 Enter a stack name and adjust the capacity parameters as needed. In this example I set the desiredCapacity and minSize at 2 to handle protein folding jobs assigned to our client, and then the maxSize set at 12 in case we need to scale capacity for larger jobs that get assigned. These parameters can be adjusted based on your desired capacity. 
 
+
+ ![Specify Stack Details](https://user-images.githubusercontent.com/68295015/89452835-25fe6180-d713-11ea-922c-c325a6b15367.png)
  
 
 In the next stack configuration step, you can optionally add additional configurations like; tags, permissions, stack policies, rollback options and more advanced options. Adding tags will make it easier for us to break out usage and cost data later if needed. Click Next to Review and then create the stack. 
 
 Under the events tab, you can see the status of the AWS resources being created. When the status is CREATE_COMPLETE (approx. 3-5 minutes), the environment with Folding@home installed is ready. Once the stack is created, the GPU instances will begin protein simulation.
+
+![cluster_details](https://user-images.githubusercontent.com/68295015/89453215-c2286880-d713-11ea-85f0-8aefb08bdfd3.png)
+
 
 #### Results
 The Amazon CloudFormation template creates a log group “fahlog” that each of our instances will send log data to, that will allow us to visualize the protein folding progress in near real-time via the Amazon CloudWatch console. To see the log data, navigate over to the “Resources” tab and click on the cloudWatchLogGroup link for ‘fahlog’. Alternatively, you can navigate to the Amazon CloudWatch Console and select ‘fahlog’ under log groups. Note: Sometimes it takes a bit of time for Folding@Home Work Units (WU) to be downloaded in the instances and allocate all the available GPUs. 
