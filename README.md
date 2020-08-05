@@ -10,11 +10,11 @@ Spot Instances are spare EC2 capacity available at up to a 90% discount compared
 
 
 ## What you’ll build
-*An Amazon Virtual Private Cloud (VPC) configured with public and private subnets according to AWS best practices. 
-*Identity and Access Management (IAM) roles to manage permissions for Amazon EC2 Auto Scaling.
-*Security Group for the EC2 Spot instances to control inbound and outbound traffic
-*Auto Scaling Group for scaling EC2 Spot instances in and out as needed using the Capacity Optimized allocation strategy.
-*Amazon CloudWatch instance metrics and logs for real-time monitoring of our protein folding progress.
+* An Amazon Virtual Private Cloud (VPC) configured with public and private subnets according to AWS best practices. 
+* Identity and Access Management (IAM) roles to manage permissions for Amazon EC2 Auto Scaling.
+* Security Group for the EC2 Spot instances to control inbound and outbound traffic
+* Auto Scaling Group for scaling EC2 Spot instances in and out as needed using the Capacity Optimized allocation strategy.
+* Amazon CloudWatch instance metrics and logs for real-time monitoring of our protein folding progress.
  
  ![FAH](https://user-images.githubusercontent.com/68295015/89449052-5fcc6980-d70d-11ea-9419-e14cafad48e0.png)
  
