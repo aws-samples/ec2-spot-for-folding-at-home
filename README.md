@@ -1,7 +1,7 @@
 ## Researching treatments for infectious disease with Folding@home and Amazon EC2 Spot Instances
 This GitHub contains an AWS CloudFormation template along with step-by-step instructions for deploying EC2 Spot Instances - optimized for the latest Folding@home client software. We’ll leverage EC2 Spot best practices to be flexible across a combination of GPU-optimized Amazon EC2 Spot Instances configured in an Amazon EC2 Auto Scaling group (ASG) to handle launching and maintaining a desired capacity, and to automatically request resources to replace any that are interrupted or manually terminated. 
 
-## What you’ll build
+**What you’ll build**
 * An Amazon Virtual Private Cloud (VPC) configured with public and private subnets according to AWS best practices. 
 * Identity and Access Management (IAM) roles to manage permissions for Amazon EC2 Auto Scaling.
 * Security Group for the EC2 Spot instances to control inbound and outbound traffic
