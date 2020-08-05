@@ -18,14 +18,12 @@ Spot Instances are spare EC2 capacity available at up to a 90% discount compared
  
  ![FAH](https://user-images.githubusercontent.com/68295015/89449052-5fcc6980-d70d-11ea-9419-e14cafad48e0.png)
  
-To complete the setup, you must have an Amazon Web Services (AWS) account with permissions to the listed resources above. When you sign up for AWS, your AWS account is automatically signed up for all services in AWS, including Amazon EC2. If you don't have an AWS account, find more info about creating an account here.
+*To complete the setup, you must have an Amazon Web Services (AWS) account with permissions to the listed resources above. When you sign up for AWS, your AWS account is automatically signed up for all services in AWS, including Amazon EC2. If you don't have an AWS account, find more info about creating an account here.*
 
 ### Costs and Licensing
 The AWS CloudFormation CFn template includes customizable configuration parameters. Some of these settings, such as instance type, will affect the cost of deployment. For cost estimates, see the pricing pages for each AWS service you will be using. Prices are subject to change. You are responsible for the cost of the AWS services used. There is no additional cost for using the CFn template.
 
-**Note:** There is no additional charge to use Deep Learning AMIs — you pay only for the AWS resources while they’re running. Folding@home client software is free, open-source software that is distributed under the Folding@home EULA.
-
-After you deploy the CloudFormation template, we recommend that you enable AWS Cost Explorer. Cost Explorer is an easy-to-use interface that lets you visualize, understand, and manage your AWS costs and usage e.g. we can breakdown costs to show hourly costs for our protein folding project. 
+**Note:** _There is no additional charge to use Deep Learning AMIs — you pay only for the AWS resources while they’re running. Folding@home client software is free, open-source software that is distributed under the Folding@home EULA._
 
 ## How to Deploy 
 ### Part One: Download and configure the CFn template.
@@ -35,9 +33,13 @@ Once downloaded, open the template file in your favorite text editor so we can m
 
 In the User Information section, we have the option to create a unique username, join or create a new team, or contribute anonymously. For this example, I’ll leave the values set to default and contribute as an anonymous user, the default team. More details about teams and leaderboards can be found here and details about PASSKEYs here. 
 
-
+```bash
+<!-- User Information --> 
+<team v="Default"/>
+<user v="0"/>
+<passkey v="PASSKEY_HERE"/>
+```
  
-
 Once edited and saved to a location we can easily find later, let’s move on to the next section where we’ll upload the template in the AWS CloudFormation console. 
 
 ### Part Two: Launching the Stack
