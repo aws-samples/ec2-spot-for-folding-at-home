@@ -479,12 +479,12 @@ Resources:
             !Sub |
                 #!/bin/bash -xe
                 sudo yum -y update
-                wget https://download.foldingathome.org/releases/public/release/fahclient/centos-6.7-64bit/v7.6/fahclient-7.6.13-1.x86_64.rpm
-                sudo rpm -i --nodeps fahclient-7.6.13-1.x86_64.rpm
-                wget https://download.foldingathome.org/releases/public/release/fahcontrol/centos-6.7-64bit/v7.6/fahcontrol-7.6.13-1.noarch.rpm
-                sudo rpm -i --nodeps fahcontrol-7.6.13-1.noarch.rpm
-                wget https://download.foldingathome.org/releases/public/release/fahviewer/centos-6.7-64bit/v7.6/fahviewer-7.6.13-1.x86_64.rpm
-                sudo rpm -i --nodeps fahviewer-7.6.13-1.x86_64.rpm
+                wget https://download.foldingathome.org/releases/public/release/fahclient/centos-6.7-64bit/v7.6/fahclient-7.6.21-1.x86_64.rpm
+                sudo rpm -i --nodeps fahclient-7.6.21-1.x86_64.rpm
+                wget https://download.foldingathome.org/releases/public/release/fahcontrol/centos-6.7-64bit/v7.6/fahcontrol-7.6.21-1.noarch.rpm
+                sudo rpm -i --nodeps fahcontrol-7.6.21-1.noarch.rpm
+                wget https://download.foldingathome.org/releases/public/release/fahviewer/centos-6.7-64bit/v7.6/fahviewer-7.6.21-1.x86_64.rpm
+                sudo rpm -i --nodeps fahviewer-7.6.21-1.x86_64.rpm
 
                 # Cloud Watch Log
                 wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
